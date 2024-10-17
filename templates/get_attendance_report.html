@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Report</title>
+    <style>
+        /* Styles as per your requirement */
+        body {
+            font-family: Arial, sans-serif;
+            background: url("{{ url_for('static', filename='bg.png') }}") no-repeat center center fixed;
+            background-size: cover;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 80px;
+            margin-top: -45px;
+        }
+        
+        .details {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.7);
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .details p {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .table-details {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.7);
+            max-width: 800px;
+            margin: 0 auto 30px;
+            overflow-x: auto;
+        }
+        
+        .table-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .nav {
+            padding: 10px;
+            background-color: #b2d2df;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .nav a {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #333;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-left: 20px;
+        }
+
+        .nav a:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a class="dash-link" href="/admin/admin_dashboard">Dashboard</a>
+        <a class="dash-link" href="/admin/get_attendance_report">Attendance Report</a>
+        <a class="logout-link" href="/admin/logout">Logout</a>
+    </div>
+
+    <h1>Attendance Report</h1>
+    
+    <div class="container">
+        <div class="details">
+            <p>Class Section: <strong>{{ class_sec }}</strong></p>
+            <p>Class Name: <strong>{{ class_name }}</strong></p>
+            <p>Class Date: <i><strong>{{ class_date }}</strong></i></p>
+        </div>
+
+        <div class="table-details">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Attendance Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student[0] }}</td>
+                        <td>{{ student[1] }}</td>
+                        <td>
+                            {% set attendance_found = false %}
+                            {% for att in attendance %}
+                                {% if att[0] == student[0] %}
+                                    {{ att[1] }}
+                                    {% set attendance_found = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if not attendance_found %}
+                                Not Found
+                            {% endif %}
+                        </td>                
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

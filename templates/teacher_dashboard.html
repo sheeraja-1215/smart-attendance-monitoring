@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Teacher Dashboard</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url("{{ url_for('static', filename='bg.png') }}") no-repeat center center fixed;
+            background-size: cover;
+            background-color: #00171f; /* Dark background from palette */
+        }
+
+        .dashboard-box {
+            background-color: #003459; /* Dark blue from palette */
+            margin-top: 10%;
+            margin-bottom: 5em;
+            padding: 2em;
+            color: #ffffff;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 2px 2px 15px 0px rgba(0, 0, 0, 0.7);
+        }
+
+        .dashboard-title {
+            text-align: center;
+            margin-bottom: 2em;
+            color: #00a8e8; /* Light blue from palette */
+        }
+
+        select {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #007ea7; /* Medium blue from palette */
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            background-color: #ffffff;
+            color: #003459;
+        }
+
+        .nav {
+            padding: 10px;
+            background-color: #003459; /* Dark blue from palette */
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .nav a {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #007ea7; /* Medium blue */
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px; /* Rounded corners */
+            margin-left: 20px;
+        }
+
+        .nav a:hover {
+            background-color: #00a8e8; /* Light blue on hover */
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 400;
+            color: #00a8e8; /* Light blue heading */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #007ea7; /* Border color matching palette */
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            color: #ffffff;
+        }
+
+        th {
+            background-color: #003459; /* Dark blue */
+        }
+
+        td {
+            background-color: #00171f; /* Dark background */
+        }
+
+        .btn-primary {
+            background-color: #007ea7;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+        }
+
+        .btn-primary:hover {
+            background-color: #00a8e8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav">
+        <a class="profile-link" href="/teacher/teacher_profile">Profile</a>
+        <a class="logout-link" href="/admin/logout">Logout</a>
+    </div>
+
+    <!-- Dashboard Title -->
+    <h1><strong>Teacher Dashboard</strong></h1>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="dashboard-box">
+                    <h2 class="dashboard-title">Mark Attendance</h2>
+
+                    <!-- Dropdown for selecting class section -->
+                    <select id="class-section-select">
+                        <option value="" disabled selected>Select Class Section</option>
+                        {% set addedSections = [] %}
+                        {% for class in classes %}
+                            {% if class[2] == session['username'] and class[4] not in addedSections %}
+                                <option value="{{ class[4] }}">{{ class[4] }}</option>
+                                {% set _ = addedSections.append(class[4]) %}
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+
+                    <!-- Loader -->
+                    <div class="loader" id="loader">Loading classes...</div>
+
+                    <!-- Table to display class details -->
+                    <table id="class-table" class="table table-striped" style="display:none;">
+                        <thead>
+                            <tr>
+                                <th>Class Name</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="class-table-body">
+                            <!-- Table rows will be added dynamically here -->
+                        </tbody>
+                    </table>
+
+                    <!-- Add Class Link -->
+                    <div class="text-center">
+                        <!-- Add Class Button -->
+                        <div class="text-center">
+                            <a href="/teacher/add_class" class="btn btn-primary">Add Class</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const classSectionSelect = document.getElementById('class-section-select');
+        const classTable = document.getElementById('class-table');
+        const loader = document.getElementById('loader');
+        const tableBody = document.getElementById('class-table-body');
+
+        classSectionSelect.addEventListener('change', function() {
+            const selectedSection = this.value;
+            showClassTable(selectedSection);
+        });
+
+        function showClassTable(selectedSection) {
+            if (selectedSection) {
+                loader.style.display = 'block'; // Show loading indicator
+                classTable.style.display = 'table'; // Display the table
+                tableBody.innerHTML = ''; // Clear previous table data
+
+                const classes = JSON.parse('{{ classes | tojson | safe }}'); // Assuming classes are passed as a JSON object from the backend
+                const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+                setTimeout(() => { // Simulating an API call delay for demo purposes
+                    let hasClasses = false;
+                    for (let i = 0; i < classes.length; i++) {
+                        // Ensure the class matches the selected section, today's date, and logged-in teacher
+                        if (classes[i][2] === '{{ session['username'] }}' && classes[i][4] === selectedSection) {
+                            const classDate = classes[i][3]; // Date is at index 3
+                          
+                                // Create a new row in the table
+                                const row = document.createElement('tr');
+                                
+                                // Class name column
+                                const classNameCell = document.createElement('td');
+                                classNameCell.innerText = classes[i][1]; // Class name is at index 1
+                                row.appendChild(classNameCell);
+
+                                // Class date column
+                                const classDateCell = document.createElement('td');
+                                classDateCell.innerText = classes[i][3]; // Class date is at index 3
+                                row.appendChild(classDateCell);
+
+                                // Attendance button column
+                                const buttonCell = document.createElement('td');
+                                const attendanceButton = document.createElement('a');
+                                attendanceButton.className = 'btn btn-primary'; // Use Bootstrap button class
+                                attendanceButton.href = '/teacher/mark_attendance/' + classes[i][0];
+                                attendanceButton.innerText = 'Mark Attendance';
+                                buttonCell.appendChild(attendanceButton);
+                                row.appendChild(buttonCell);
+
+                                // Append the row to the table body
+                                tableBody.appendChild(row);
+                                hasClasses = true;
+                            
+                        }
+                    }
+
+                    loader.style.display = 'none'; // Hide loading indicator
+                    if (!hasClasses) {
+                        const noClassRow = document.createElement('tr');
+                        const noClassCell = document.createElement('td');
+                        noClassCell.colSpan = 3; // Span across all columns
+                        noClassCell.innerText = 'No classes found for this section on this date.';
+                        noClassCell.style.textAlign = 'center'; // Center the text
+                        noClassRow.appendChild(noClassCell);
+                        tableBody.appendChild(noClassRow);
+                    }
+                }, 500); // Adjust this timeout as needed
+            } else {
+                classTable.style.display = 'none';
+                tableBody.innerHTML = ''; // Clear the table if no section is selected
+                loader.style.display = 'none'; // Hide the loader
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #00171f;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+        
+        .nav {
+            margin: 0;
+            padding: 15px;
+            background-color: #003459;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+        }
+
+        .nav a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007ea7;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-left: 20px;
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        .nav a:hover {
+            background-color: #00a8e8;
+        }
+
+        .container {
+            max-width: 600px; /* Set max width for container */
+            margin: 50px auto; /* Center the container */
+            padding: 20px; /* Add padding to container */
+            background-color: #003459; /* Dark background for the container */
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5); /* Soft shadow */
+        }
+
+        .profile-title {
+            text-align: center;
+            margin-bottom: 1.5em;
+            color: #00a8e8;
+            font-size: 1.8em; /* Increase title size for emphasis */
+        }
+
+        h2, h3 {
+            color: #00a8e8;
+            margin-bottom: 0.5em; /* Add spacing below headings */
+        }
+
+        .profile-info {
+            margin-bottom: 2em; /* Space before update form */
+        }
+
+        form {
+            background-color: #007ea7;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffffff;
+            font-weight: bold; /* Bold labels for emphasis */
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            font-size: 16px;
+            transition: border-color 0.3s; /* Smooth transition for border */
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            border-color: #00a8e8; /* Highlight border on focus */
+            outline: none; /* Remove default outline */
+        }
+
+        input[type="submit"] {
+            padding: 12px 20px;
+            background-color: #00a8e8;
+            color: white;          
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        input[type="submit"]:hover {
+            background-color: #007ea7;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a class="dash-link" href="/teacher/dashboard">Dashboard</a>
+        <a class="logout-link" href="/admin/logout">Logout</a>
+    </div>
+
+    <div class="container">
+        <h2 class="profile-title">Profile</h2>
+        <div class="profile-info">
+            <p><strong>Name:</strong> {{ profile_data[0] }}</p>
+            <p><strong>Email:</strong> {{ profile_data[1] }}</p>
+            <p><strong>Phone:</strong> {{ profile_data[2] }}</p>
+        </div>
+
+        <h3>Update Profile</h3>
+        <form method="POST" action="/teacher/update_profile">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ profile_data[0] }}" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ profile_data[1] }}" required>
+
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" value="{{ profile_data[2] }}" required>
+
+            <input type="submit" value="Update">
+        </form>
+    </div>
+</body>
+</html>

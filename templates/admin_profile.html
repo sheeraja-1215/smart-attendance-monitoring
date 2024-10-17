@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b3d4e1;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .profile-box {
+            background-color: #0099cc;
+            margin: 45px auto 5em auto;
+            padding: 2em;
+            color: #fff;
+            border-radius: 15px; /* More rounded corners */
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.7);
+            width: 50%; /* Centering the box */
+            text-align: center;
+        }
+
+        .profile-title {
+            text-align: center;
+            margin-bottom: 1.5em;
+            font-size: 2em;
+            color: #fff;
+        }
+
+        h2, h3 {
+            color: #333;
+        }
+
+        form {
+            background-color: #83a9da;
+            padding: 20px;
+            border-radius: 10px; /* More rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            width: 50%; /* Centering form */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%; /* Full width inputs */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            font-size: 1em;
+        }
+
+        input[type="submit"] {
+            padding: 10px 16px;
+            background-color: #202124;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .nav {
+            padding: 10px;
+            background-color: #b2d2df;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .nav a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-left: 20px;
+        }
+
+        .nav a:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .dash-link,
+        .logout-link {
+            margin-left: 40px;
+        }
+
+        .profile-info p {
+            margin: 0.5em 0;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a class="dash-link" href="/admin/admin_dashboard">Dashboard</a>
+        <a class="logout-link" href="/admin/logout">Logout</a>
+    </div>
+
+    <div class="profile-box">
+        <h2 class="profile-title">Profile</h2>
+        <div class="profile-info">
+            <p><strong>Name:</strong> {{ profile_data[0] }}</p>
+            <p><strong>Email:</strong> {{ profile_data[1] }}</p>
+            <p><strong>Phone:</strong> {{ profile_data[2] }}</p>
+        </div>
+    </div>
+
+    <h3 style="text-align: center;">Update Profile</h3>
+    <form method="POST" action="/admin/update_admin_profile">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="{{ profile_data[0] }}" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ profile_data[1] }}" required>
+
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" value="{{ profile_data[2] }}" required>
+
+        <input type="submit" value="Update">
+    </form>
+</body>
+</html>

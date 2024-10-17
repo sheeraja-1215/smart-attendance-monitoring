@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Attendance Monitoring System</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <style>
+    body {
+      background: url("{{ url_for('static', filename='bg.png') }}") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.8); /* White background for the container */
+      margin: 3em auto 5em;
+      padding: 1em;
+      color: #00171f; /* Dark blue text color */
+      border-radius: 25px; /* Increased border radius for rounded corners */
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+    .section-title {
+      margin: 0;
+      padding: 1em 0;
+      text-align: center;
+      color: #003459; /* Medium blue color for titles */
+    }
+    .login-btn {
+      background-color: #007ea7; /* Lighter blue button */
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px; /* Rounded button */
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .login-btn:hover {
+      background-color: #00a8e8; /* Lighter shade on hover */
+    }
+    .features-section {
+      margin: 3em auto 5em;
+      padding: 2em;
+      border-radius: 25px; /* Increased border radius for rounded corners */
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      color: #00171f; /* Dark blue text color */
+    }
+    .features-title {
+      margin: 0 0 2em;
+      color: #003459; /* Medium blue color for titles */
+    }
+    .features-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 1em 0;
+    }
+    .features-list li {
+      margin-bottom: 1em;
+      display: flex;
+      align-items: center;
+      color: #007ea7; /* Lighter blue for list items */
+    }
+    .features-list li:before {
+      content: "\2022";
+      color: #007ea7; /* Lighter blue for bullet points */
+      font-weight: bold;
+      display: inline-block;
+      width: 1em;
+      margin-right: 0.5em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="section-title">Attendance Monitoring System</h1>
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="text-center">
+          <a href="{{ url_for('login') }}" class="login-btn">Login</a>
+        </div>
+      </div>
+    </div>
+    <div class="features-section">
+      <h2 class="features-title">Features of the Attendance Monitoring System:</h2>
+      <ul class="features-list">
+        <li>Efficient and Automated Attendance Tracking</li>
+        <li>Real-time Attendance Reporting</li>
+        <li>Easy Integration with Existing Systems</li>
+        <li>User-friendly Interface</li>
+        <li>Secure Data Management</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

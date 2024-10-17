@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Class</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url("{{ url_for('static', filename='bg.png') }}") no-repeat center center fixed;
+            background-size: cover;
+            background-color: #ffffff;
+        }
+        h1 {
+            color: #00171f;
+            margin-bottom: 60px; /* Add margin for spacing */
+            text-align: center;
+        }
+        h2 {
+            color: #00171f;
+            text-align: center;
+            margin-top: -35px;
+            margin-bottom: 10%;
+        }
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 15px; /* Increased border-radius for rounded box */
+            box-shadow: 0 2px 4px rgba(0, 23, 31, 0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #00171f;
+            font-weight: bold;
+        }
+        input[type="text"],
+        select,
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #003459;
+            border-radius: 12px; /* Rounded corners for input fields */
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #00171f;
+        }
+        input[type="submit"] {
+            padding: 10px 16px;
+            background-color: #007ea7;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px; /* Rounded corners for the submit button */
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .nav {
+            margin-top: -8px;
+            padding: 10px;
+            background-color: #00171f;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            border-radius: 0 0 10px 10px; /* Slight rounding of navbar corners */
+        }
+        .nav a {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #003459;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 10px; /* Rounded corners for navigation buttons */
+            margin-left: 20px;
+        }
+        .nav a:hover {
+            background-color: #007ea7;
+            color: #ffffff;
+        }
+        .custom-btn {
+            background-color: #007ea7; /* Medium blue from your palette */
+            color: #ffffff; /* White text */
+            border: none; /* Remove default border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px 20px; /* Padding for better appearance */
+            font-size: 1rem; /* Font size */
+            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+            cursor: pointer; /* Pointer cursor on hover */
+        }
+
+        .custom-btn:hover {
+            background-color: #00a8e8; /* Light blue on hover */
+        }
+
+        .custom-btn:focus {
+            outline: none; /* Remove default focus outline */
+            box-shadow: 0 0 5px rgba(0, 122, 167, 0.5); /* Custom focus effect */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Add Class</h1>
+        <form method="POST" action="/teacher/add_class">
+            <div class="form-group">
+                <label for="class_name">Class Name</label>
+                <input type="text" class="form-control" id="class_name" name="class_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="class_section">Class Section</label>
+                <select id="class_section" name="class_section" class="form-control" required>
+                    <option value="" disabled selected>Select Class Section</option>
+                    {% for section in class_sections %}
+                        <option value="{{ section[0] }}">{{ section[0] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="attendance_date">Attendance Date</label>
+                <input type="date" class="form-control" id="attendance_date" name="attendance_date" required>
+            </div>
+
+            <button type="submit" class="custom-btn mt-3">Add Class</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Success</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .message-box {
+            text-align: center;
+            background-color: #007ea7; /* Medium blue from palette */
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    <script>
+        // Redirect to teacher dashboard after 3 seconds
+        setTimeout(function() {
+            window.location.href = '/teacher/dashboard';
+        }, 3000); // 3000 milliseconds = 3 seconds
+    </script>
+</head>
+<body>
+    <div class="message-box">
+        <h1>Attendance Marked Successfully!</h1>
+        <p>You will be redirected to the teacher dashboard shortly.</p>
+    </div>
+</body>
+</html>

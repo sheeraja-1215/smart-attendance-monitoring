@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Report</title>
+    <style>
+        /* Styles as per your requirement */
+        body {
+            font-family: Arial, sans-serif;
+            background: url("{{ url_for('static', filename='bg.png') }}") no-repeat center center fixed;
+            background-size: cover;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 80px;
+            margin-top: -45px;
+        }
+        
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+            margin-bottom: 30px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        select,
+        input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        input[type="submit"] {
+            padding: 12px 16px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .details {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.7);
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+        
+        .details p {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .table-details {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.7);
+            max-width: 800px;
+            margin: 0 auto 30px;
+            overflow-x: auto;
+        }
+        
+        .table-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .nav {
+            padding: 10px;
+            background-color: #b2d2df;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .nav a {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #333;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-left: 20px;
+        }
+
+        .nav a:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a class="dash-link" href="/admin/admin_dashboard">Dashboard</a>
+        <a class="dash-link" href="/admin/get_attendance_report">Attendance Report</a>
+        <a class="logout-link" href="/admin/logout">Logout</a>
+    </div>
+    
+    <h1>Attendance Report</h1>
+    
+    <div class="container">
+        <form method="POST" action="/admin/get_attendance_report">
+            <label for="class_sec">Class Section:</label>
+            <select name="class_sec" id="class_sec">
+                {% for sec in class_secs %}
+                    <option value="{{ sec[0] }}">{{ sec[0] }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="class_name">Class Name:</label>
+            <select name="class_name" id="class_name">
+                {% for class_name in class_names %}
+                    <option value="{{ class_name[0] }}">{{ class_name[0] }}</option>
+                {% endfor %}
+            </select>    
+
+            <label for="class_date">Class Date (yyyy-mm-dd):</label>
+            <input type="date" id="class_date" name="class_date" required pattern="\d{4}-\d{2}-\d{2}" title="Please enter a date in the format yyyy-mm-dd">
+            
+            <input type="submit" value="Generate Report">
+        </form>
+    </div>
+</body>
+</html>

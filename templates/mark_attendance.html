@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Mark Attendance</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #00171f;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+
+        h1 {
+            color: #00171f;
+            text-align: center;
+            margin-top: 5%;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            margin-top: 20px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            text-align: center;
+            padding: 10px;
+        }
+
+        button {
+            width: 80px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .present {
+            background-color: #007ea7; /* Blue for present */
+        }
+
+        .absent {
+            background-color: #dc3545; /* Red for absent */
+        }
+
+        #submit-container {
+            text-align: center; /* Center the submit button */
+            margin-top: 20px;
+        }
+
+        #submit-button {
+            width: 50%; /* Adjusted width for smaller button */
+            font-size: 0.9em; /* Slightly smaller font size */
+            border-radius: 25px; /* Rounded corners */
+            padding: 10px; /* Padding for better touch area */
+        }
+        .nav {
+            margin: 0;
+            padding: 15px;
+            background-color: #003459;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+        }
+
+        .nav a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007ea7;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-left: 20px;
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        .nav a:hover {
+            background-color: #00a8e8;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a class="dash-link" href="/teacher/dashboard">Dashboard</a>
+        <a class="logout-link" href="/admin/logout">Logout</a>
+    </div>
+    <div class="container">
+        <h1>Mark Attendance - Class Section: {{ class_sec }}</h1>
+        <form method="POST" id="attendance-form">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student[1] }}</td>
+                        <td>
+                            <button type="button" class="present" data-id="{{ student[0] }}" data-status="present">Present</button>
+                            <button type="button" class="absent" data-id="{{ student[0] }}" data-status="absent">Absent</button>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="2">No students found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div id="submit-container">
+                <button type="submit" class="btn btn-success" id="submit-button">Submit Attendance</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const presentButtons = document.querySelectorAll('.present');
+        const absentButtons = document.querySelectorAll('.absent');
+        const submitButton = document.getElementById('submit-button');
+
+        // Initialize a Map to track attendance status
+        const attendanceStatus = new Map();
+
+        // Function to update attendance status
+        function updateAttendance(studentId, status) {
+            attendanceStatus.set(studentId, status);
+            // Enable submit button if all students have been marked
+            submitButton.disabled = attendanceStatus.size < {{ students|length }};
+        }
+
+        // Event listeners for present buttons
+        presentButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const studentId = this.getAttribute('data-id');
+                updateAttendance(studentId, 'present');
+            });
+        });
+
+        // Event listeners for absent buttons
+        absentButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const studentId = this.getAttribute('data-id');
+                updateAttendance(studentId, 'absent');
+            });
+        });
+
+        // Override form submission to include attendance data
+        document.getElementById('attendance-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData();
+            attendanceStatus.forEach((status, studentId) => {
+                formData.append('student_ids', studentId);
+                formData.append(`status_${studentId}`, status);
+            });
+
+            // Submit the form data via fetch
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = '/teacher/dashboard'; // Redirect on success
+                }
+            }).catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
