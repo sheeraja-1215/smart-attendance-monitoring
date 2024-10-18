@@ -284,6 +284,24 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = 'beware'  # Add your secret key here
 
+def create_tables():
+    conn = psycopg2.connect(
+    host=os.getenv('DB_HOST'),
+    user=os.getenv('DB_USER'),
+    password=os.getenv('DB_PASSWORD'),
+    dbname=os.getenv('DB_NAME')
+    )
+    cur = conn.cursor()
+    
+    with open('db.sql', 'r') as file:
+        sql_commands = file.read()
+        cur.execute(sql_commands)
+    
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 # Database connection configuration using environment variables
 db = psycopg2.connect(
     host=os.getenv('DB_HOST'),
@@ -291,6 +309,8 @@ db = psycopg2.connect(
     password=os.getenv('DB_PASSWORD'),
     dbname=os.getenv('DB_NAME')
 )
+
+
 
 @app.route('/')
 def home():
@@ -553,3 +573,4 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    create_tables()
