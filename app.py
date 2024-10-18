@@ -293,7 +293,7 @@ def create_tables():
     )
     cur = conn.cursor()
     
-    with open('db.sql', 'r') as file:
+    with open('C:\Users\sheer\Downloads\Attendance_monitoring_system-main\Attendance_monitoring_system-main\db.sql', 'r') as file:
         sql_commands = file.read()
         cur.execute(sql_commands)
     
