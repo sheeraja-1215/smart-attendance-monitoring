@@ -320,37 +320,98 @@ def home():
 def index():
     return render_template('index.html')
 
+# @app.route('/login', methods=['GET', 'POST'])
+# def login():
+#     if request.method == 'POST':
+#         username = request.form['username']
+#         password = request.form['password']
+#         role = request.form['role']
+#         cur = db.cursor()
+#         if role == 'teacher':
+#             cur.execute("SELECT * FROM teachers WHERE username = %s AND password = %s", (username, password))
+#             user = cur.fetchone()
+#             if user:
+#                 session['loggedin'] = True
+#                 session['username'] = user[0]
+#                 session['role'] = 'teacher'
+#                 return redirect('/teacher/dashboard')
+#             else:
+#                 error = 'Invalid login credentials.'
+#                 return render_template('login.html', error=error)
+#         elif role == 'admin':
+#             cur.execute("SELECT * FROM admins WHERE username = %s AND password = %s", (username, password))
+#             user = cur.fetchone()
+#             if user:
+#                 session['loggedin'] = True
+#                 session['username'] = user[0]
+#                 session['role'] = 'admin'
+#                 return redirect('/admin/admin_dashboard')
+#             else:
+#                 error = 'Invalid login credentials'
+#                 return render_template('login.html', error=error)
+#         cur.close()
+#     return render_template('login.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         role = request.form['role']
-        cur = db.cursor()
-        if role == 'teacher':
-            cur.execute("SELECT * FROM teachers WHERE username = %s AND password = %s", (username, password))
-            user = cur.fetchone()
-            if user:
-                session['loggedin'] = True
-                session['username'] = user[0]
-                session['role'] = 'teacher'
-                return redirect('/teacher/dashboard')
-            else:
-                error = 'Invalid login credentials.'
-                return render_template('login.html', error=error)
-        elif role == 'admin':
-            cur.execute("SELECT * FROM admins WHERE username = %s AND password = %s", (username, password))
-            user = cur.fetchone()
-            if user:
-                session['loggedin'] = True
-                session['username'] = user[0]
-                session['role'] = 'admin'
-                return redirect('/admin/admin_dashboard')
-            else:
-                error = 'Invalid login credentials'
-                return render_template('login.html', error=error)
-        cur.close()
+        
+        try:
+            # Establish connection to the database
+            conn = psycopg2.connect(
+                    host=os.getenv('DB_HOST'),
+                    user=os.getenv('DB_USER'),
+                    password=os.getenv('DB_PASSWORD'),
+                    dbname=os.getenv('DB_NAME')
+            )
+            conn.autocommit = True  # Enable autocommit to avoid transaction issues
+            cur = conn.cursor()
+
+            if role == 'teacher':
+                # Fetch teacher details
+                cur.execute("SELECT * FROM teachers WHERE username = %s AND password = %s", (username, password))
+                user = cur.fetchone()
+                if user:
+                    session['loggedin'] = True
+                    session['username'] = user[0]
+                    session['role'] = 'teacher'
+                    return redirect('/teacher/dashboard')
+                else:
+                    error = 'Invalid login credentials.'
+                    return render_template('login.html', error=error)
+            
+            elif role == 'admin':
+                # Fetch admin details
+                cur.execute("SELECT * FROM admins WHERE username = %s AND password = %s", (username, password))
+                user = cur.fetchone()
+                if user:
+                    session['loggedin'] = True
+                    session['username'] = user[0]
+                    session['role'] = 'admin'
+                    return redirect('/admin/admin_dashboard')
+                else:
+                    error = 'Invalid login credentials.'
+                    return render_template('login.html', error=error)
+
+        except psycopg2.Error as e:
+            # Rollback on error and display the error message
+            if conn:
+                conn.rollback()
+            error = f"Database error: {str(e)}"
+            return render_template('login.html', error=error)
+        
+        finally:
+            # Ensure that the cursor and connection are closed
+            if cur:
+                cur.close()
+            if conn:
+                conn.close()
+    
     return render_template('login.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
